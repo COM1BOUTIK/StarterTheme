@@ -26,7 +26,7 @@
       <p>
         {* [1][/1] is for a HTML tag. *}
         {l
-          s='The current status of your merchandise return is: [1] %state% [/1]'
+          s='The current status of your merchandise return is: [1] %status% [/1]'
           d='Shop.Theme.CustomerAccount'
           sprintf=[
             '[1]' => '<strong>',
@@ -51,13 +51,10 @@
     {foreach from=$products item=product}
       <tr>
         <td>{$product.product_reference}</td>
-        <td>{$product.product_name}</td>
-        <td>{$product.product_quantity}</td>
-      </tr>
-      {if $product.customizations}
-        {foreach $product.customizations  as $customization}
-          <tr>
-            <td colspan="2">
+        <td>{$product.product_name}
+          {if $product.customizations}
+            <br />
+            {foreach $product.customizations as $customization}
               <ul>
                 {foreach from=$customization.fields item=field}
                   {if $field.type == 'image'}
@@ -67,11 +64,20 @@
                   {/if}
                 {/foreach}
               </ul>
-            </td>
-            <td>{$customization.quantity}</td>
-          </tr>
-        {/foreach}
-      {/if}
+            {/foreach}
+          {/if}
+        </td>
+        <td>
+          {if $product.customizations}
+            {$product.product_quantity}
+          {else}
+            {foreach $product.customizations as $customization}
+              {$customization.quantity}
+            {/foreach}
+          {/if}
+        </td>
+      </tr>
+
     {/foreach}
     </tbody>
   </table>
@@ -89,7 +95,7 @@
         <li>
           {* [1][/1] is for a HTML tag. *}
           {l
-            s='Please print out the [1]PDF return slip[/1] and include it with your package.'
+            s='Please print out the [1]returns form[/1] and include it with your package.'
             d='Shop.Theme.CustomerAccount'
             sprintf=[
               '[1]' => '<a href="'|cat:$return.print_url|cat:'">',
@@ -100,7 +106,7 @@
         <li>
           {* [1][/1] is for a HTML tag. *}
           {l
-            s='Please see the PDF return slip ([1]for the correct address[/1]).'
+            s='Please check the [1]returns form[/1] for the correct address.'
             d='Shop.Theme.CustomerAccount'
             sprintf=[
               '[1]' => '<a href="'|cat:$return.print_url|cat:'">',
